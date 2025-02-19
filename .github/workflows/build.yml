@@ -1,0 +1,22 @@
+name: Build DLL
+
+on:
+  push:
+    tags: ['*']
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+    - name: Build
+      run: cmake --build build --config Release
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: ${{ github.workspace }}/build/Release/*
